@@ -15,46 +15,67 @@
             font-family: 'Arial', '微软雅黑', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            margin: 0;
+            padding: 10px;
         }
 
         .container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 100%;
             width: 100%;
-            padding: 40px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        
+        .top-fixed {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 12px;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .main-layout {
+            display: block;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .left-panel, .right-panel {
+            height: fit-content;
+        }
+        
+        .center-content {
+            min-height: calc(100vh - 40px);
         }
 
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 10px;
-            font-size: 32px;
+            margin-bottom: 5px;
+            font-size: 24px;
         }
 
         .subtitle {
             text-align: center;
             color: #999;
-            margin-bottom: 30px;
-            font-size: 14px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
 
         .debate-topic-box {
             background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
-            border: 3px solid #ff9800;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: padding 0.3s, box-shadow 0.3s, background 0.3s;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+            margin-bottom: 10px;
         }
         
         .debate-topic-box.scrolled {
@@ -64,7 +85,7 @@
         }
         
         .debate-input-section {
-            margin-top: 15px;
+            margin-top: 10px;
         }
         
         .debate-input-section label {
@@ -78,13 +99,13 @@
         
         .debate-title-input {
             width: 100%;
-            padding: 12px;
+            padding: 8px;
             border: 2px solid #ffcc80;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: bold;
             resize: vertical;
-            min-height: 50px;
+            min-height: 40px;
         }
         
         .debate-title-input:focus {
@@ -94,9 +115,9 @@
         }
         
         .debate-sides-input {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 15px;
         }
         
@@ -178,6 +199,159 @@
             background: #1976d2;
             transform: scale(1.05);
         }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-actions button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .current-status {
+            margin-top: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .positive-side {
+            border-color: #4285f4 !important;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            border-width: 3px !important;
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3) !important;
+        }
+        
+        .negative-side {
+            border-color: #ff6b6b !important;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%) !important;
+            border-width: 3px !important;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3) !important;
+        }
+        
+        .center-debate {
+            margin-bottom: 15px;
+        }
+        
+        .top-fixed .debate-topic-box {
+            margin-bottom: 10px;
+        }
+        
+        .top-fixed .current-status {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .top-fixed .status-item {
+            border-bottom: none;
+            padding: 5px 0;
+        }
+        
+        .top-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 15px;
+            align-items: stretch;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .top-left, .top-right {
+            height: 100%;
+            min-height: 100px;
+        }
+        
+        .top-left .debate-topic-box,
+        .top-right .debate-topic-box {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-left .side-content,
+        .top-right .side-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-left .side-title-top,
+        .top-right .side-title-top {
+            flex: 1;
+        }
+        
+        .top-center {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .side-title-top {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            min-height: 80px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        .side-content {
+            margin-top: 15px;
+        }
+        
+        .side-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            min-height: 200px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
 
         .debate-label {
             font-size: 14px;
@@ -198,9 +372,9 @@
         }
 
         .debate-sides {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .side-item {
@@ -262,14 +436,14 @@
 
         .stages {
             display: grid;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
         .stage {
             background: #f8f9fa;
             border-left: 4px solid #667eea;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
@@ -288,30 +462,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .stage-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #333;
         }
 
         .stage-duration {
             color: #999;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .timer-display {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: bold;
             text-align: center;
             color: #667eea;
-            margin: 20px 0;
+            margin: 15px 0;
             font-family: 'Courier New', monospace;
-            letter-spacing: 5px;
+            letter-spacing: 3px;
         }
 
         .stage.active .timer-display {
@@ -326,15 +500,15 @@
 
         .sub-items {
             display: grid;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .sub-item {
             background: white;
-            padding: 12px 15px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 10px 12px;
+            border-radius: 5px;
+            font-size: 13px;
             color: #555;
             border-left: 3px solid #ddd;
         }
@@ -347,20 +521,21 @@
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-top: 10px;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 5px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 80px;
+            min-width: 70px;
         }
 
         .btn-start {
@@ -422,10 +597,10 @@
         .warning {
             background: #ffe0e0;
             color: #c92a2a;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 12px;
-            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-top: 8px;
             text-align: center;
             display: none;
         }
@@ -436,10 +611,10 @@
 
         .progress-bar {
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: #eee;
             border-radius: 2px;
-            margin-top: 10px;
+            margin-top: 8px;
             overflow: hidden;
         }
 
@@ -453,15 +628,15 @@
         .stage-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-            font-size: 13px;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 12px;
             color: #666;
         }
 
         .info-item {
             background: white;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 4px;
         }
         
@@ -469,17 +644,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 15px 0;
-            padding: 10px;
+            margin: 10px 0;
+            padding: 8px;
             background: #f0f8ff;
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
         .quick-timer-display {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: #ff6b6b;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .btn-quick-timer {
@@ -497,17 +672,44 @@
             transform: scale(1.05);
         }
 
+        @media (max-width: 1200px) {
+            .top-layout {
+                grid-template-columns: 1fr 1.2fr 1fr;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .top-layout {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .top-fixed {
+                position: static;
+                border-bottom: none;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+            
+            .side-title-top {
+                min-height: 60px;
+                padding: 10px;
+                font-size: 13px;
+            }
+        }
+        
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 10px;
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 20px;
             }
 
             .timer-display {
-                font-size: 36px;
+                font-size: 28px;
             }
 
             .controls {
@@ -517,6 +719,10 @@
             button {
                 width: 100%;
             }
+            
+            .debate-topic-box {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -524,58 +730,73 @@
     <div class="container">
         <h1>🎤 辩论赛倒计时系统</h1>
         
-        <!-- ====== 辩题编辑区域 ====== -->
-        <div class="debate-topic-box">
-            <div class="debate-label">📋 辩题设置</div>
-            
-            <!-- 辩题输入区域 -->
-            <div class="debate-input-section">
-                <label for="debateTitle">辩题标题：</label>
-                <textarea id="debateTitle" class="debate-title-input" placeholder="请输入今日辩题..." rows="2"></textarea>
-                
-                <div class="debate-sides-input">
-                    <div class="side-input-group">
-                        <label for="positiveTitle">正方观点标题：</label>
-                        <input type="text" id="positiveTitle" class="side-title-input" placeholder="例如：数据积累">
-                    </div>
-                    
-                    <div class="side-input-group">
-                        <label for="negativeTitle">反方观点标题：</label>
-                        <input type="text" id="negativeTitle" class="side-title-input" placeholder="例如：场景切入">
+        <!-- 顶部固定区域 -->
+        <div class="top-fixed">
+            <div class="top-layout">
+                <!-- 左侧 - 正方观点 -->
+                <div class="top-left">
+                    <div class="debate-topic-box positive-side">
+                        <div class="debate-label">🔵 正方观点</div>
+                        <div class="side-content">
+                            <div class="side-title-top" id="topPositiveTitle">请设置正方观点</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="debate-actions">
-                    <button class="btn-update-debate" onclick="updateDebateTopic()">✅ 更新辩题</button>
-                    <button class="btn-clear-debate" onclick="clearDebateInputs()">🗑️ 清空</button>
-                </div>
-            </div>
-            
-            <!-- 辩题显示区域 -->
-            <div class="debate-display-section" style="display: none;">
-                <div class="debate-title" id="displayTitle">请先设置辩题</div>
-                <div class="debate-sides">
-                    <div class="side-item positive">
-                        <div class="side-name" id="displayPositiveTitle">◆ 正方观点</div>
+                <!-- 中间 - 辩题和状态 -->
+                <div class="top-center">
+                    <div class="debate-topic-box center-debate">
+                        <div class="debate-label">📋 辩题设置</div>
+                        
+                        <!-- 辩题输入区域 -->
+                        <div class="debate-input-section">
+                            <label for="debateTitle">辩题标题：</label>
+                            <textarea id="debateTitle" class="debate-title-input" placeholder="请输入今日辩题..." rows="2"></textarea>
+                            
+                            <div class="debate-sides-input">
+                                <div class="side-input-group">
+                                    <label for="positiveTitle">正方观点标题：</label>
+                                    <input type="text" id="positiveTitle" class="side-title-input" placeholder="例如：数据积累">
+                                </div>
+                                
+                                <div class="side-input-group">
+                                    <label for="negativeTitle">反方观点标题：</label>
+                                    <input type="text" id="negativeTitle" class="side-title-input" placeholder="例如：场景切入">
+                                </div>
+                            </div>
+                            
+                            <div class="debate-actions">
+                                <button class="btn-update-debate" onclick="updateDebateTopic()">✅ 更新辩题</button>
+                                <button class="btn-clear-debate" onclick="clearDebateInputs()">🗑️ 清空</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 辩题显示区域 -->
+                        <div class="debate-display-section" style="display: none;">
+                            <div class="debate-title" id="displayTitle">请先设置辩题</div>
+                            <div class="debate-actions">
+                                <button class="btn-edit-debate" onclick="editDebateTopic()">✏️ 编辑辩题</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="side-item negative">
-                        <div class="side-name" id="displayNegativeTitle">◆ 反方观点</div>
-                    </div>
                 </div>
-                <div class="debate-actions">
-                    <button class="btn-edit-debate" onclick="editDebateTopic()">✏️ 编辑辩题</button>
+                
+                <!-- 右侧 - 反方观点 -->
+                <div class="top-right">
+                    <div class="debate-topic-box negative-side">
+                        <div class="debate-label">🔴 反方观点</div>
+                        <div class="side-content">
+                            <div class="side-title-top" id="topNegativeTitle">请设置反方观点</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- ====== 辩题编辑区域 ====== -->
         
-        <div class="subtitle">总时长：约 70-80 分钟</div>
-
-        <div class="global-controls">
-            <button class="btn-start" onclick="startAllTimer()">⏱️ 开始计时</button>
-            <button class="btn-pause" onclick="pauseAllTimer()">⏸️ 暂停</button>
-            <button class="btn-reset" onclick="resetAllTimer()">🔄 重置全部</button>
-        </div>
+        <div class="main-layout">
+            <!-- 中间内容区域 -->
+            <div class="center-content">
+                <div class="subtitle">总时长：约 70-80 分钟</div>
 
         <div class="stages" id="stagesContainer">
             <!-- 环节一 -->
@@ -698,6 +919,10 @@
                 </div>
                 <div class="warning">时间即将用尽！</div>
             </div>
+        </div>
+            </div>
+            
+
         </div>
     </div>
 
@@ -865,6 +1090,40 @@
                 el.classList.remove('active');
             });
             document.querySelector(`[data-stage="${stage}"] .btn-select`).classList.add('active');
+            
+            // 更新右侧状态显示
+            updateStatusDisplay();
+        }
+        
+        // 更新状态显示
+        function updateStatusDisplay() {
+            const stageNames = {
+                1: '环节一：立论陈词',
+                2: '环节二：驳论与对辩', 
+                3: '环节三：自由辩论',
+                4: '环节四：总结陈词'
+            };
+            
+            const currentStageDisplay = document.getElementById('currentStageDisplay');
+            const totalProgressDisplay = document.getElementById('totalProgressDisplay');
+            
+            if (currentStageDisplay) {
+                currentStageDisplay.textContent = stageNames[currentStage] || '未知环节';
+            }
+            
+            if (totalProgressDisplay) {
+                // 计算总进度
+                const totalSeconds = 300 + 360 + 1800 + 300; // 总时长
+                let usedSeconds = 0;
+                
+                Object.keys(timers).forEach(stage => {
+                    const timer = timers[stage];
+                    usedSeconds += (timer.totalSeconds - timer.remainingSeconds);
+                });
+                
+                const progress = Math.floor((usedSeconds / totalSeconds) * 100);
+                totalProgressDisplay.textContent = progress + '%';
+            }
         }
 
         // 处理辩题区域在滚动时的样式变化
@@ -892,11 +1151,14 @@
                 quickTimerBtn.addEventListener('click', toggleQuickTimer);
             }
             
-            // 监听页面滚动，处理辩题区域样式
-            window.addEventListener('scroll', handleDebateTopicScroll);
-            
             // 加载保存的辩题数据
             loadDebateData();
+            
+            // 初始化状态显示
+            updateStatusDisplay();
+            
+            // 定期更新状态显示
+            setInterval(updateStatusDisplay, 1000);
         });
 
         // 快捷键支持
@@ -972,8 +1234,13 @@
             
             // 更新显示区域
             document.getElementById('displayTitle').textContent = title;
-            document.getElementById('displayPositiveTitle').textContent = '◆ 正方观点(' + positiveTitle + ')';
-            document.getElementById('displayNegativeTitle').textContent = '◆ 反方观点(' + negativeTitle + ')';
+            
+            // 更新顶部的观点显示
+            const topLeftTitle = document.getElementById('topPositiveTitle');
+            const topRightTitle = document.getElementById('topNegativeTitle');
+            
+            if (topLeftTitle) topLeftTitle.textContent = positiveTitle;
+            if (topRightTitle) topRightTitle.textContent = negativeTitle;
             
             // 保存到本地存储
             const debateData = {
@@ -1019,6 +1286,13 @@
                     // 如果有完整数据，直接显示
                     if (debateData.title && debateData.positiveTitle && debateData.negativeTitle) {
                         updateDebateTopic();
+                    } else {
+                        // 即使没有完整数据，也要更新顶部的显示
+                        const topLeftTitle = document.getElementById('topPositiveTitle');
+                        const topRightTitle = document.getElementById('topNegativeTitle');
+                        
+                        if (topLeftTitle && debateData.positiveTitle) topLeftTitle.textContent = debateData.positiveTitle;
+                        if (topRightTitle && debateData.negativeTitle) topRightTitle.textContent = debateData.negativeTitle;
                     }
                 } catch (e) {
                     console.log('加载辩题数据失败:', e);
