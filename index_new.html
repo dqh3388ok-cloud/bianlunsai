@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辩论赛倒计时</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', '微软雅黑', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .debate-topic-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            border: 3px solid #ff9800;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: padding 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+        
+        .debate-topic-box.scrolled {
+            padding: 15px;
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 245, 230, 0.95) 0%, rgba(255, 232, 204, 0.95) 100%);
+        }
+        
+        .debate-input-section {
+            margin-top: 15px;
+        }
+        
+        .debate-input-section label {
+            display: block;
+            font-weight: bold;
+            color: #ff6f00;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .debate-title-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffcc80;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            resize: vertical;
+            min-height: 50px;
+        }
+        
+        .debate-title-input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
+        }
+        
+        .debate-sides-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .side-input-group {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .side-input-group:first-child {
+            border-left-color: #4285f4;
+        }
+        
+        .side-input-group:last-child {
+            border-left-color: #ff6b6b;
+        }
+        
+        .side-title-input, .side-desc-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .side-title-input:focus, .side-desc-input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+        
+        .side-desc-input {
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .debate-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn-update-debate, .btn-clear-debate, .btn-edit-debate {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-update-debate {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-update-debate:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .btn-clear-debate {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-clear-debate:hover {
+            background: #da190b;
+            transform: scale(1.05);
+        }
+        
+        .btn-edit-debate {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-edit-debate:hover {
+            background: #1976d2;
+            transform: scale(1.05);
+        }
+
+        .debate-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ff6f00;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .debate-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .debate-sides {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .side-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .side-item.positive {
+            border-left-color: #4285f4;
+        }
+
+        .side-item.positive .side-name {
+            color: #4285f4;
+        }
+
+        .side-item.negative {
+            border-left-color: #ff6b6b;
+        }
+
+        .side-item.negative .side-name {
+            color: #ff6b6b;
+        }
+
+        .side-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .side-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .debate-title {
+                font-size: 18px;
+            }
+
+            .debate-sides {
+                grid-template-columns: 1fr;
+            }
+
+            .debate-topic-box {
+                padding: 15px;
+            }
+            
+            .debate-sides-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .debate-actions {
+                flex-direction: column;
+            }
+        }
+
+        .stages {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stage {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .stage:hover {
+            background: #f0f2f5;
+            transform: translateX(5px);
+        }
+
+        .stage.active {
+            background: #e8f0fe;
+            border-left-color: #4285f4;
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stage-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stage-duration {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 5px;
+        }
+
+        .stage.active .timer-display {
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .sub-items {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sub-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #555;
+            border-left: 3px solid #ddd;
+        }
+
+        .sub-item.current {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .btn-start {
+            background: #4285f4;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #1f6cda;
+            transform: scale(1.05);
+        }
+
+        .btn-pause {
+            background: #ffc107;
+            color: white;
+        }
+
+        .btn-pause:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+            transform: scale(1.05);
+        }
+
+        .btn-select {
+            background: #667eea;
+            color: white;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-select:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .btn-select.active {
+            background: #ff6b6b;
+        }
+
+        .global-controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .warning {
+            background: #ffe0e0;
+            color: #c92a2a;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .warning.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .stage-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .info-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .quick-timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 8px;
+        }
+        
+        .quick-timer-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        
+        .btn-quick-timer {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .btn-quick-timer:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .timer-display {
+                font-size: 36px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 辩论赛倒计时系统</h1>
+        
+        <!-- ====== 辩题编辑区域 ====== -->
+        <div class="debate-topic-box">
+            <div class="debate-label">📋 辩题设置</div>
+            
+            <!-- 辩题输入区域 -->
+            <div class="debate-input-section">
+                <label for="debateTitle">辩题标题：</label>
+                <textarea id="debateTitle" class="debate-title-input" placeholder="请输入今日辩题..." rows="2"></textarea>
+                
+                <div class="debate-sides-input">
+                    <div class="side-input-group">
+                        <label for="positiveTitle">正方观点标题：</label>
+                        <input type="text" id="positiveTitle" class="side-title-input" placeholder="例如：数据积累">
+                    </div>
+                    
+                    <div class="side-input-group">
+                        <label for="negativeTitle">反方观点标题：</label>
+                        <input type="text" id="negativeTitle" class="side-title-input" placeholder="例如：场景切入">
+                    </div>
+                </div>
+                
+                <div class="debate-actions">
+                    <button class="btn-update-debate" onclick="updateDebateTopic()">✅ 更新辩题</button>
+                    <button class="btn-clear-debate" onclick="clearDebateInputs()">🗑️ 清空</button>
+                </div>
+            </div>
+            
+            <!-- 辩题显示区域 -->
+            <div class="debate-display-section" style="display: none;">
+                <div class="debate-title" id="displayTitle">请先设置辩题</div>
+                <div class="debate-sides">
+                    <div class="side-item positive">
+                        <div class="side-name" id="displayPositiveTitle">◆ 正方观点</div>
+                    </div>
+                    <div class="side-item negative">
+                        <div class="side-name" id="displayNegativeTitle">◆ 反方观点</div>
+                    </div>
+                </div>
+                <div class="debate-actions">
+                    <button class="btn-edit-debate" onclick="editDebateTopic()">✏️ 编辑辩题</button>
+                </div>
+            </div>
+        </div>
+        <!-- ====== 辩题编辑区域 ====== -->
+        
+        <div class="subtitle">总时长：约 70-80 分钟</div>
+
+        <div class="global-controls">
+            <button class="btn-start" onclick="startAllTimer()">⏱️ 开始计时</button>
+            <button class="btn-pause" onclick="pauseAllTimer()">⏸️ 暂停</button>
+            <button class="btn-reset" onclick="resetAllTimer()">🔄 重置全部</button>
+        </div>
+
+        <div class="stages" id="stagesContainer">
+            <!-- 环节一 -->
+            <div class="stage" data-stage="1">
+                <div class="stage-header">
+                    <div>
+                        <div class="stage-title">环节一：立论陈词</div>
+                        <div class="stage-duration">总时长：10 分钟</div>
+                    </div>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item current">正方一辩陈词 - 5 分钟</div>
+                    <div class="sub-item">反方一辩陈词 - 5 分钟</div>
+                </div>
+                <div class="timer-display">05:00</div>
+                <div class="stage-info">
+                    <div class="info-item">📍 阶段：第 1/4 环节</div>
+                    <div class="info-item">⏱️ 进度: <span class="progress-percent">0</span>%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn-select active" onclick="selectStage(1)">选择环节</button>
+                    <button class="btn-start" onclick="startTimer(1)">开始</button>
+                    <button class="btn-pause" onclick="pauseTimer(1)">暂停</button>
+                    <button class="btn-reset" onclick="resetTimer(1)">重置</button>
+                </div>
+                <div class="warning">时间即将用尽！</div>
+            </div>
+
+            <!-- 环节二 -->
+            <div class="stage" data-stage="2">
+                <div class="stage-header">
+                    <div>
+                        <div class="stage-title">环节二：驳论与对辩</div>
+                        <div class="stage-duration">总时长：18 分钟（3 轮，每轮 6 分钟）</div>
+                    </div>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item current">第一轮：反方二辩反驳 - 6 分钟</div>
+                    <div class="sub-item">第二轮：正方二辩反驳 - 6 分钟</div>
+                    <div class="sub-item">第三轮：双方三辩对辩 - 6 分钟</div>
+                </div>
+                <div class="timer-display">06:00</div>
+                <div class="stage-info">
+                    <div class="info-item">📍 阶段：第 2/4 环节</div>
+                    <div class="info-item">⏱️ 进度: <span class="progress-percent">0</span>%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn-select" onclick="selectStage(2)">选择环节</button>
+                    <button class="btn-start" onclick="startTimer(2)">开始</button>
+                    <button class="btn-pause" onclick="pauseTimer(2)">暂停</button>
+                    <button class="btn-reset" onclick="resetTimer(2)">重置</button>
+                </div>
+                <div class="warning">时间即将用尽！</div>
+            </div>
+
+            <!-- 环节三 -->
+            <div class="stage" data-stage="3">
+                <div class="stage-header">
+                    <div>
+                        <div class="stage-title">环节三：自由辩论</div>
+                        <div class="stage-duration">总时长：30 分钟</div>
+                    </div>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item current">双方自由交替发言 - 30 分钟</div>
+                    <div class="sub-item">❌ 禁止一人连续上台两次（除非对方无人接话）</div>
+                </div>
+                <div class="timer-display">30:00</div>
+                <div class="stage-info">
+                    <div class="info-item">📍 阶段：第 3/4 环节</div>
+                    <div class="info-item">⏱️ 进度: <span class="progress-percent">0</span>%</div>
+                </div>
+                <div class="quick-timer">
+                    <div class="quick-timer-display">00:20</div>
+                    <button class="btn-quick-timer">20秒发言计时</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn-select" onclick="selectStage(3)">选择环节</button>
+                    <button class="btn-start" onclick="startTimer(3)">开始</button>
+                    <button class="btn-pause" onclick="pauseTimer(3)">暂停</button>
+                    <button class="btn-reset" onclick="resetTimer(3)">重置</button>
+                </div>
+                <div class="warning">时间即将用尽！</div>
+            </div>
+
+            <!-- 环节四 -->
+            <div class="stage" data-stage="4">
+                <div class="stage-header">
+                    <div>
+                        <div class="stage-title">环节四：总结陈词</div>
+                        <div class="stage-duration">总时长：10 分钟</div>
+                    </div>
+                </div>
+                <div class="sub-items">
+                    <div class="sub-item current">反方三辩总结 - 5 分钟</div>
+                    <div class="sub-item">正方三辩总结 - 5 分钟</div>
+                </div>
+                <div class="timer-display">05:00</div>
+                <div class="stage-info">
+                    <div class="info-item">📍 阶段：第 4/4 环节</div>
+                    <div class="info-item">⏱️ 进度: <span class="progress-percent">0</span>%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn-select" onclick="selectStage(4)">选择环节</button>
+                    <button class="btn-start" onclick="startTimer(4)">开始</button>
+                    <button class="btn-pause" onclick="pauseTimer(4)">暂停</button>
+                    <button class="btn-reset" onclick="resetTimer(4)">重置</button>
+                </div>
+                <div class="warning">时间即将用尽！</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 计时器状态管理
+        const timers = {
+            1: { totalSeconds: 300, remainingSeconds: 300, isRunning: false, interval: null },
+            2: { totalSeconds: 360, remainingSeconds: 360, isRunning: false, interval: null },
+            3: { totalSeconds: 1800, remainingSeconds: 1800, isRunning: false, interval: null },
+            4: { totalSeconds: 300, remainingSeconds: 300, isRunning: false, interval: null }
+        };
+
+        // 20秒快速计时器
+        let quickTimer = {
+            totalSeconds: 20,
+            remainingSeconds: 20,
+            isRunning: false,
+            interval: null
+        };
+
+        let currentStage = 1;
+
+        // 格式化时间
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // 更新显示
+        function updateDisplay(stage) {
+            const stageElement = document.querySelector(`[data-stage="${stage}"]`);
+            const timerDisplay = stageElement.querySelector('.timer-display');
+            const progressFill = stageElement.querySelector('.progress-fill');
+            const progressPercent = stageElement.querySelector('.progress-percent');
+            const warning = stageElement.querySelector('.warning');
+
+            const timer = timers[stage];
+            timerDisplay.textContent = formatTime(timer.remainingSeconds);
+
+            // 更新进度条
+            const progress = ((timer.totalSeconds - timer.remainingSeconds) / timer.totalSeconds) * 100;
+            progressFill.style.width = progress + '%';
+            progressPercent.textContent = Math.floor(progress);
+
+            // 显示警告信息（剩余时间少于 1 分钟）
+            if (timer.remainingSeconds <= 60 && timer.remainingSeconds > 0 && timer.isRunning) {
+                warning.classList.add('show');
+            } else {
+                warning.classList.remove('show');
+            }
+
+            // 时间结束处理
+            if (timer.remainingSeconds <= 0 && timer.isRunning) {
+                timer.isRunning = false;
+                clearInterval(timer.interval);
+                timerDisplay.textContent = '00:00';
+                playNotification();
+            }
+        }
+
+        // 播放提示音
+        function playNotification() {
+            // 创建简单的蜂鸣音效
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        // 开始计时
+        function startTimer(stage) {
+            // 停止其他计时器
+            Object.keys(timers).forEach(key => {
+                if (key != stage && timers[key].isRunning) {
+                    pauseTimer(key);
+                }
+            });
+
+            const timer = timers[stage];
+            if (timer.isRunning) return;
+
+            timer.isRunning = true;
+            updateDisplay(stage);
+
+            timer.interval = setInterval(() => {
+                if (timer.remainingSeconds > 0) {
+                    timer.remainingSeconds--;
+                    updateDisplay(stage);
+                }
+            }, 1000);
+
+            updateStageActive(stage);
+        }
+
+        // 暂停计时
+        function pauseTimer(stage) {
+            const timer = timers[stage];
+            if (!timer.isRunning) return;
+
+            timer.isRunning = false;
+            clearInterval(timer.interval);
+        }
+
+        // 重置计时
+        function resetTimer(stage) {
+            const timer = timers[stage];
+            timer.isRunning = false;
+            clearInterval(timer.interval);
+
+            switch(stage) {
+                case 1: timer.remainingSeconds = 300; break;
+                case 2: timer.remainingSeconds = 360; break;
+                case 3: timer.remainingSeconds = 1800; break;
+                case 4: timer.remainingSeconds = 300; break;
+            }
+
+            updateDisplay(stage);
+        }
+
+        // 全局开始
+        function startAllTimer() {
+            startTimer(currentStage);
+        }
+
+        // 全局暂停
+        function pauseAllTimer() {
+            Object.keys(timers).forEach(key => {
+                pauseTimer(key);
+            });
+        }
+
+        // 全局重置
+        function resetAllTimer() {
+            Object.keys(timers).forEach(key => {
+                resetTimer(key);
+            });
+        }
+
+        // 选择环节
+        function selectStage(stage) {
+            currentStage = stage;
+            updateStageActive(stage);
+        }
+
+        // 更新活动环节显示
+        function updateStageActive(stage) {
+            document.querySelectorAll('.stage').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`[data-stage="${stage}"]`).classList.add('active');
+
+            document.querySelectorAll('.btn-select').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`[data-stage="${stage}"] .btn-select`).classList.add('active');
+        }
+
+        // 处理辩题区域在滚动时的样式变化
+        function handleDebateTopicScroll() {
+            const debateTopicBox = document.querySelector('.debate-topic-box');
+            if (window.scrollY > 50) {
+                // 滚动超过50px时，添加scrolled类
+                debateTopicBox.classList.add('scrolled');
+            } else {
+                // 恢复原始样式
+                debateTopicBox.classList.remove('scrolled');
+            }
+        }
+
+        // 初始化显示
+        window.addEventListener('load', () => {
+            Object.keys(timers).forEach(stage => {
+                updateDisplay(stage);
+            });
+            updateStageActive(1);
+            
+            // 初始化20秒快速计时器
+            const quickTimerBtn = document.querySelector('.btn-quick-timer');
+            if (quickTimerBtn) {
+                quickTimerBtn.addEventListener('click', toggleQuickTimer);
+            }
+            
+            // 监听页面滚动，处理辩题区域样式
+            window.addEventListener('scroll', handleDebateTopicScroll);
+            
+            // 加载保存的辩题数据
+            loadDebateData();
+        });
+
+        // 快捷键支持
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (timers[currentStage].isRunning) {
+                    pauseTimer(currentStage);
+                } else {
+                    startTimer(currentStage);
+                }
+            }
+            if (e.code === 'KeyR') {
+                resetTimer(currentStage);
+            }
+            // 按Q键触发20秒快速计时
+            if (e.code === 'KeyQ') {
+                toggleQuickTimer();
+            }
+        });
+        
+        // 20秒快速计时器功能
+        function toggleQuickTimer() {
+            const quickTimerDisplay = document.querySelector('.quick-timer-display');
+            const quickTimerBtn = document.querySelector('.btn-quick-timer');
+            
+            if (!quickTimerDisplay || !quickTimerBtn) return;
+            
+            if (quickTimer.isRunning) {
+                // 停止计时
+                clearInterval(quickTimer.interval);
+                quickTimer.isRunning = false;
+                quickTimer.remainingSeconds = 20;
+                quickTimerDisplay.textContent = '00:20';
+                quickTimerBtn.textContent = '20秒发言计时';
+                quickTimerBtn.style.background = '#ff6b6b';
+            } else {
+                // 开始计时
+                quickTimer.isRunning = true;
+                quickTimer.remainingSeconds = 20;
+                quickTimerBtn.textContent = '停止计时';
+                quickTimerBtn.style.background = '#ffc107';
+                
+                quickTimer.interval = setInterval(() => {
+                    if (quickTimer.remainingSeconds > 0) {
+                        quickTimer.remainingSeconds--;
+                        const mins = Math.floor(quickTimer.remainingSeconds / 60);
+                        const secs = quickTimer.remainingSeconds % 60;
+                        quickTimerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    } else {
+                        // 时间到
+                        clearInterval(quickTimer.interval);
+                        quickTimer.isRunning = false;
+                        quickTimerDisplay.textContent = '00:00';
+                        quickTimerBtn.textContent = '20秒发言计时';
+                        quickTimerBtn.style.background = '#ff6b6b';
+                        playNotification(); // 播放提示音
+                    }
+                }, 1000);
+            }
+        }
+        
+        // 辩题管理功能
+        function updateDebateTopic() {
+            const title = document.getElementById('debateTitle').value.trim();
+            const positiveTitle = document.getElementById('positiveTitle').value.trim();
+            const negativeTitle = document.getElementById('negativeTitle').value.trim();
+            
+            if (!title || !positiveTitle || !negativeTitle) {
+                alert('请填写完整的辩题信息！');
+                return;
+            }
+            
+            // 更新显示区域
+            document.getElementById('displayTitle').textContent = title;
+            document.getElementById('displayPositiveTitle').textContent = '◆ 正方观点(' + positiveTitle + ')';
+            document.getElementById('displayNegativeTitle').textContent = '◆ 反方观点(' + negativeTitle + ')';
+            
+            // 保存到本地存储
+            const debateData = {
+                title: title,
+                positiveTitle: positiveTitle,
+                negativeTitle: negativeTitle,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('debateData', JSON.stringify(debateData));
+            
+            // 切换到显示模式
+            document.querySelector('.debate-input-section').style.display = 'none';
+            document.querySelector('.debate-display-section').style.display = 'block';
+            
+            alert('辩题更新成功！');
+        }
+        
+        function editDebateTopic() {
+            // 切换到编辑模式
+            document.querySelector('.debate-input-section').style.display = 'block';
+            document.querySelector('.debate-display-section').style.display = 'none';
+        }
+        
+        function clearDebateInputs() {
+            if (confirm('确定要清空所有输入内容吗？')) {
+                document.getElementById('debateTitle').value = '';
+                document.getElementById('positiveTitle').value = '';
+                document.getElementById('negativeTitle').value = '';
+            }
+        }
+        
+        function loadDebateData() {
+            const savedData = localStorage.getItem('debateData');
+            if (savedData) {
+                try {
+                    const debateData = JSON.parse(savedData);
+                    
+                    // 填充输入框
+                    document.getElementById('debateTitle').value = debateData.title || '';
+                    document.getElementById('positiveTitle').value = debateData.positiveTitle || '';
+                    document.getElementById('negativeTitle').value = debateData.negativeTitle || '';
+                    
+                    // 如果有完整数据，直接显示
+                    if (debateData.title && debateData.positiveTitle && debateData.negativeTitle) {
+                        updateDebateTopic();
+                    }
+                } catch (e) {
+                    console.log('加载辩题数据失败:', e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
